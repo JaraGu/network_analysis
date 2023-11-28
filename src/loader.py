@@ -71,8 +71,8 @@ class SlackDataLoader:
             userIdsByName[user['name']] = user['id']
         return userNamesById, userIdsByName        
     # combine all json file in all-weeks8-9
-def slack_parser(path_channel):
-    """ parse slack data to extract useful informations from the json file
+    def slack_parser(self,path_channel):
+        """ parse slack data to extract useful informations from the json file
         step of execution
         1. Import the required modules
         2. read all json file from the provided path
@@ -80,7 +80,7 @@ def slack_parser(path_channel):
         4. extract all required informations from the slack data
         5. convert to dataframe and merge all
         6. reset the index and return dataframe
-    """
+        """
 
     # specify path to get json files
     combined = []
