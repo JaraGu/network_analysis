@@ -1,3 +1,4 @@
+import glob
 import json
 import argparse
 import os
@@ -5,6 +6,7 @@ import io
 import shutil
 import copy
 from datetime import datetime
+import pandas as pd
 from pick import pick
 from time import sleep
 
@@ -110,22 +112,24 @@ class SlackDataLoader:
         combined = []
         for json_file in glob.glob(f"{path_channel}*.json"):
             with open(json_file, 'r', encoding="utf8") as slack_data:
-                combined.append(slack_data)
+                data=json.load(slack_data)
+                combined.append(data)
 
         # loop through all json files and extract required informations
         dflist = []
-        for slack_data in combined:
+        for data in combined:
 
             msg_type, msg_content, sender_id, time_msg, msg_dist, time_thread_st, reply_users, \
             reply_count, reply_users_count, tm_thread_end = [],[],[],[],[],[],[],[],[],[]
 
-            for row in slack_data:
+            for row in data:
                 if 'bot_id' in row.keys():
                     continue
                 else:
                     msg_type.append(row['type'])
                     msg_content.append(row['text'])
-                    if 'user_profile' in row.keys(): sender_id.append(row['user_profile']['real_name'])
+                    if 'user_profile' in row.keys(): 
+                        sender_id.append(row['user_profile']['real_name'])
                     else: sender_id.append('Not provided')
                     time_msg.append(row['ts'])
                     if 'blocks' in row.keys() and len(row['blocks'][0]['elements'][0]['elements']) != 0 :
@@ -135,7 +139,8 @@ class SlackDataLoader:
                         time_thread_st.append(row['thread_ts'])
                     else:
                         time_thread_st.append(0)
-                    if 'reply_users' in row.keys(): reply_users.append(",".join(row['reply_users'])) 
+                    if 'reply_users' in row.keys(): 
+                        reply_users.append(",".join(row['reply_users'])) 
                     else:    reply_users.append(0)
                     if 'reply_count' in row.keys():
                         reply_count.append(row['reply_count'])
@@ -167,7 +172,8 @@ class SlackDataLoader:
         combined = []
         for json_file in glob.glob(f"{path}*.json"):
             with open(json_file, 'r') as slack_data:
-                combined.append(slack_data)
+                data=json.load(slack_data)
+                combined.append(data)
 
         reaction_name, reaction_count, reaction_users, msg, user_id = [], [], [], [], []
 
