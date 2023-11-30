@@ -10,8 +10,6 @@ import pandas as pd
 from pick import pick
 from time import sleep
 
-
-
 # Create wrapper classes for using slack_sdk in place of slacker
 class SlackDataLoader:
     '''
@@ -97,7 +95,7 @@ class SlackDataLoader:
         return userNamesById, userIdsByName        
 
     # combine all json file in all-weeks8-9
-    def slack_parser(self,path_channel):
+    def slack_parser(self, path_channel):
         """ parse slack data to extract useful informations from the json file
             step of execution
             1. Import the required modules
@@ -166,7 +164,7 @@ class SlackDataLoader:
         return dfall
 
 
-    def parse_slack_reaction(self,path, channel):
+    def parse_slack_reaction(self, path, channel):
         """get reactions"""
         dfall_reaction = pd.DataFrame()
         combined = []
@@ -195,7 +193,7 @@ class SlackDataLoader:
         df_reaction['channel'] = channel
         return df_reaction
 
-    def get_community_participation(self,path):
+    def get_community_participation(self, path):
         """ specify path to get json files"""
         combined = []
         comm_dict = {}
@@ -209,13 +207,13 @@ class SlackDataLoader:
             for msg in a:
                 if 'replies' in msg.keys():
                     for i in msg['replies']:
-                        comm_dict[i['user']] = comm_dict.get(i['user'], 0)+1
+                        comm_dict[i['user']] = comm_dict.get(i['user'], 0) + 1
         return comm_dict
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Export Slack history')
 
-    
     parser.add_argument('--zip', help="Name of a zip file to import")
     args = parser.parse_args()
+
